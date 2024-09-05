@@ -51,7 +51,7 @@ if __name__ == "__main__":
     df = df.reset_index(drop=True)
     val_df = val_df.reset_index(drop=True)
     inf_df = glob(config.EMBED_IMG_PATH)
-    # inf_df=[t.replace("\\","/") for t in inf_df]
+    inf_df = [t.replace("\\", "/") for t in inf_df]
 
     print("TRAIN_DATASET : {} VALIDATION_DATASET : {} EMBEDDING_LOG_DATASET: {}".format(
         len(df), len(val_df), len(inf_df)))
