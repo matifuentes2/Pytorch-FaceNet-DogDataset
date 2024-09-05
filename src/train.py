@@ -1,5 +1,3 @@
-# from dataset import DogDatasetNaive, get_tensors, embedDataset, DogDatasetHard
-from dataset import embedDataset, DogDatasetHard
 import engine
 import config
 import loss_fn
@@ -27,6 +25,7 @@ global model
 model = GoogLeNet().to(config.DEVICE)
 ###############
 
+from dataset import embedDataset, DogDatasetHard
 
 def load_df():
     paths = glob(config.IMG_PATH)

@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from glob import glob
 import os
 import config
-# from train import model
+from train import model
 
 
 class DogDatasetNaive(Dataset):
