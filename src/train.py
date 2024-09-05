@@ -17,6 +17,8 @@ import os
 from torch.utils.tensorboard import SummaryWriter
 import tensorflow as tf
 import tensorboard as tb
+from torch.optim.lr_scheduler import ReduceLROnPlateau
+
 tf.io.gfile = tb.compat.tensorflow_stub.io.gfile
 
 ## global definitions##
@@ -66,6 +68,11 @@ if __name__ == "__main__":
 
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
     criterion = loss_fn.TripletLoss().to(config.DEVICE)
+
+    # Add the learning rate scheduler here (point 7)
+    scheduler = ReduceLROnPlateau(
+        optimizer, mode='min', factor=0.1, patience=5, verbose=True)
+
     E = engine.Engine(criterion=criterion,
                       optimizer=optimizer, device=config.DEVICE)
 
@@ -75,8 +82,12 @@ if __name__ == "__main__":
         train_loss = E.train(dataloader, epoch)
         print(f"TRAINING STEP: {epoch} LOSS: {train_loss}")
 
+        # Add gradient clipping here (point 6)
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+
         val_loss = E.evaluate(val_dataloader, epoch)
-        print(f"TRAINING STEP: {epoch} LOSS: {val_loss}")
+        print(f"VALIDATION STEP: {epoch} LOSS: {val_loss}")
+        scheduler.step(val_loss)
 
         writer.add_scalar("Loss/train", train_loss, epoch)
         writer.add_scalar("Loss/val", val_loss, epoch)
