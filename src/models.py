@@ -28,9 +28,9 @@ class InceptionBlock(nn.Module):
         return torch.cat([self.branch1(x), self.branch2(x), self.branch3(x), self.branch4(x)], 1)
 
 
-class FaceNet(nn.Module):
+class GoogLeNet(nn.Module):
     def __init__(self):
-        super(FaceNet, self).__init__()
+        super(GoogLeNet, self).__init__()
 
         self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3)
         self.maxpool1 = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
@@ -112,7 +112,7 @@ class InceptionAux(nn.Module):
 # Add auxiliary classifiers to FaceNet
 
 
-class FaceNetWithAux(FaceNet):
+class FaceNetWithAux(GoogLeNet):
     def __init__(self, num_classes):
         super(FaceNetWithAux, self).__init__()
         self.aux1 = InceptionAux(512, num_classes)
