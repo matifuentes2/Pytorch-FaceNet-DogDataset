@@ -32,10 +32,10 @@ from dataset import DogDatasetNaive,get_tensors,embedDataset,DogDatasetHard
 
 def load_df():
     paths=glob(config.IMG_PATH)
-    labels=[path.split("\\")[-1][:-4].split(".")[0] for path in paths]
-    file_name=[path.split("\\")[-1][:-4].split(".")[1] for path in paths]
+    labels=[path.split("/")[-1][:-4].split(".")[0] for path in paths]
+    file_name=[path.split("/")[-1][:-4].split(".")[1] for path in paths]
     df=pd.DataFrame({"img_paths":paths,"labels":labels,"file_name":file_name})
-    df["img_paths"]=df["img_paths"].apply(lambda x: x.replace("\\","/"))
+    df["img_paths"]=df["img_paths"].apply(lambda x: x.replace("/","/"))
     return df#.head(500)
 
 
@@ -53,12 +53,12 @@ if __name__ == "__main__":
     df=df.reset_index(drop=True)
     val_df=val_df.reset_index(drop=True)
     inf_df=glob(config.EMBED_IMG_PATH)
-    inf_df=[t.replace("\\","/") for t in inf_df]
+    inf_df=[t.replace("/","/") for t in inf_df]
 
     print("TRAIN_DATASET : {} VALIDATION_DATASET : {} EMBEDDING_LOG_DATASET: {}".format(len(df),len(val_df),len(inf_df)))
 
-    dogdata=DogDatasetHard(df["img_paths"].values,df.labels.values)
-    val_data=DogDatasetHard(val_df["img_paths"].values,val_df.labels.values)
+    dogdata=DogDatasetNaive(df["img_paths"].values,df.labels.values)
+    val_data=DogDatasetNaive(val_df["img_paths"].values,val_df.labels.values)
     inf_data=embedDataset(inf_df)
 
     dataloader = DataLoader(dogdata, batch_size=config.BATCH_SIZE,
